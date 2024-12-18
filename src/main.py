@@ -29,6 +29,30 @@ class CalculatorApp(ft.Container):
                     expand=True,
                     controls=[
                         ActionButton(
+                            text="x²", button_clicked=self.button_clicked, action="square"),
+                        ActionButton(
+                            text="x³", button_clicked=self.button_clicked, action="cube"),
+                        ActionButton(
+                            text="√x", button_clicked=self.button_clicked, action="sqrt"),
+                    ]
+                ),
+                ft.Row(
+                    expand=True,
+                    controls=[
+                        ActionButton(
+                            text="1/x", button_clicked=self.button_clicked, action="reciprocal"),
+                        ActionButton(
+                            text="sin", button_clicked=self.button_clicked, action="sin"),
+                        ActionButton(
+                            text="cos", button_clicked=self.button_clicked, action="cos"),
+                        ActionButton(
+                            text="tan", button_clicked=self.button_clicked, action="tan"),
+                    ]
+                ),
+                ft.Row(
+                    expand=True,
+                    controls=[
+                        ActionButton(
                             text="AC",
                             button_clicked=self.button_clicked,
                             action="clear",
@@ -103,32 +127,7 @@ class CalculatorApp(ft.Container):
                             text="=", button_clicked=self.button_clicked, action="calculate"),
                     ]
                 ),
-                # 新增的數學操作行
-                ft.Row(
-                    expand=True,
-                    controls=[
-                        ActionButton(
-                            text="1/x", button_clicked=self.button_clicked, action="reciprocal"),
-                        ActionButton(
-                            text="sin", button_clicked=self.button_clicked, action="sin"),
-                        ActionButton(
-                            text="cos", button_clicked=self.button_clicked, action="cos"),
-                        ActionButton(
-                            text="tan", button_clicked=self.button_clicked, action="tan"),
-                    ]
-                ),
-                # 新增的平方、立方、平方根行
-                ft.Row(
-                    expand=True,
-                    controls=[
-                        ActionButton(
-                            text="x²", button_clicked=self.button_clicked, action="square"),
-                        ActionButton(
-                            text="x³", button_clicked=self.button_clicked, action="cube"),
-                        ActionButton(
-                            text="√x", button_clicked=self.button_clicked, action="sqrt"),
-                    ]
-                ),
+                
             ]
         )
         return ui
@@ -193,11 +192,10 @@ class CalculatorApp(ft.Container):
             )
             self.reset()
         elif action == "backspace":
-            self.result.value = str(self.result.value)  # 確保是字符串
-            self.result.value = self.result.value[:-1]  # 移除最後一個字符
-            if self.result.value == "":  # 如果結果變成空字符串，重置為 "0"
-                self.result.value = "0"
-            
+            self.result.value = str(self.result.value)
+            self.result.value = self.result.value[:-1]
+            if self.result.value == "":
+                self.result.value = "0"           
         elif action == "reciprocal":
             self.result.value = str(
                 self.format_number(
