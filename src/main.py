@@ -192,6 +192,12 @@ class CalculatorApp(ft.Container):
                 )
             )
             self.reset()
+        elif action == "backspace":
+            self.result.value = str(self.result.value)  # 確保是字符串
+            self.result.value = self.result.value[:-1]  # 移除最後一個字符
+            if self.result.value == "":  # 如果結果變成空字符串，重置為 "0"
+                self.result.value = "0"
+            
         elif action == "reciprocal":
             self.result.value = str(
                 self.format_number(
