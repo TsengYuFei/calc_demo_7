@@ -1,10 +1,9 @@
 import flet as ft
+import math  # 引入數學庫
 from calculate import Calculator
 from buttons import DigitButton, OperatorButton, ActionButton
 
-
 class CalculatorApp(ft.Container):
-    # application's root control (i.e. "view") containing all other controls
     def __init__(self):
         super().__init__()
         self.reset()
@@ -29,7 +28,6 @@ class CalculatorApp(ft.Container):
                 ft.Row(
                     expand=True,
                     controls=[
-
                         ActionButton(
                             text="AC",
                             button_clicked=self.button_clicked,
@@ -45,7 +43,6 @@ class CalculatorApp(ft.Container):
                             button_clicked=self.button_clicked,
                             action="percent",
                         ),
-
                         OperatorButton(
                             text="÷",
                             button_clicked=self.button_clicked,
@@ -106,6 +103,32 @@ class CalculatorApp(ft.Container):
                             text="=", button_clicked=self.button_clicked, action="calculate"),
                     ]
                 ),
+                # 新增的數學操作行
+                ft.Row(
+                    expand=True,
+                    controls=[
+                        ActionButton(
+                            text="1/x", button_clicked=self.button_clicked, action="reciprocal"),
+                        ActionButton(
+                            text="sin", button_clicked=self.button_clicked, action="sin"),
+                        ActionButton(
+                            text="cos", button_clicked=self.button_clicked, action="cos"),
+                        ActionButton(
+                            text="tan", button_clicked=self.button_clicked, action="tan"),
+                    ]
+                ),
+                # 新增的平方、立方、平方根行
+                ft.Row(
+                    expand=True,
+                    controls=[
+                        ActionButton(
+                            text="x²", button_clicked=self.button_clicked, action="square"),
+                        ActionButton(
+                            text="x³", button_clicked=self.button_clicked, action="cube"),
+                        ActionButton(
+                            text="√x", button_clicked=self.button_clicked, action="sqrt"),
+                    ]
+                ),
             ]
         )
         return ui
@@ -129,7 +152,6 @@ class CalculatorApp(ft.Container):
             self.new_operand = False
         else:
             self.result.value = self.result.value + str(value)
-        pass
 
     def operator_button_clicked(self, e):
         self.operator = e.control.operations
@@ -145,8 +167,6 @@ class CalculatorApp(ft.Container):
             self.operand1 = float(self.result.value)
         self.new_operand = True
 
-        pass
-
     def action_button_clicked(self, e):
         action = e.control.action
         if action == "clear":
@@ -155,7 +175,7 @@ class CalculatorApp(ft.Container):
         elif action == "negate":
             self.result.value = str(
                 self.format_number(
-                    -1*float(self.result.value)
+                    -1 * float(self.result.value)
                 )
             )
         elif action == "percent":
@@ -172,6 +192,51 @@ class CalculatorApp(ft.Container):
                 )
             )
             self.reset()
+        elif action == "reciprocal":
+            self.result.value = str(
+                self.format_number(
+                    1 / float(self.result.value)
+                )
+            )
+        elif action == "sin":
+            self.result.value = str(
+                self.format_number(
+                    math.sin(math.radians(float(self.result.value)))
+                )
+            )
+        elif action == "cos":
+            self.result.value = str(
+                self.format_number(
+                    math.cos(math.radians(float(self.result.value)))
+                )
+            )
+        elif action == "tan":
+            self.result.value = str(
+                self.format_number(
+                    math.tan(math.radians(float(self.result.value)))
+                )
+            )
+        elif action == "square":
+            self.result.value = str(
+                self.format_number(
+                    float(self.result.value) ** 2
+                )
+            )
+        elif action == "cube":
+            self.result.value = str(
+                self.format_number(
+                    float(self.result.value) ** 3
+                )
+            )
+        elif action == "sqrt":
+            if float(self.result.value) < 0:
+                self.result.value = "Error"  # 防止根號負數
+            else:
+                self.result.value = str(
+                    self.format_number(
+                        math.sqrt(float(self.result.value))
+                    )
+                )
         else:
             raise ValueError("Invalid action")
 
@@ -181,35 +246,17 @@ class CalculatorApp(ft.Container):
         else:
             return num
 
-    def format_number(self, num):
-        try:
-            if isinstance(num, (int, float)):
-                if num % 1 == 0:
-                    return int(num)
-                else:
-                    return num
-            else:
-                return num
-        except Exception as e:
-            print(f"Error formatting number: {e}")
-            return "Error"
-
     def reset(self):
         self.operator = "+"
         self.operand1 = 0
         self.new_operand = True
-
 
 def main(page: ft.Page):
     page.title = "Calc App"
     page.bgcolor = "#6C6C6C"
     page.window.min_width = 500
     page.window.min_height = 350
-    # create application instance
     calc = CalculatorApp()
-
-    # add application's root control to the page
     page.add(calc)
-
 
 ft.app(target=main)
